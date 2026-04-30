@@ -324,28 +324,35 @@ classDiagram
 sequenceDiagram
     participant Doador as 👨 Doador
     participant Frontend as 🖥️ Frontend
+    participant API as 📡 REST API
     participant Backend as ⚙️ Backend
     participant BD as 🗄️ Banco de Dados
 
     Doador->>Frontend: 1. Acessa plataforma
-    Frontend->>Backend: 2. POST /doador/recomendacao?categoria_id=1
+    Frontend->>API: 2. POST /doador/recomendacao<br/>(categoria_id=1)
+    API->>Backend: Processa requisição
     Backend->>BD: 3. Busca estoques com categoria
     BD-->>Backend: 4. Retorna instituições
-    Backend-->>Frontend: 5. Retorna TOP 3 recomendações<br/>(por prioridade + status)
+    Backend-->>API: JSON com dados
+    API-->>Frontend: 5. Retorna TOP 3 recomendações<br/>(por prioridade + status)
     Frontend-->>Doador: 6. Exibe cards com urgência
     
     Doador->>Frontend: 7. Clica "Ver Detalhes"
-    Frontend->>Backend: 8. GET /instituicoes/:id
+    Frontend->>API: 8. GET /instituicoes/:id
+    API->>Backend: Processa requisição
     Backend->>BD: 9. Busca informações completas
     BD-->>Backend: 10. Retorna dados
-    Backend-->>Frontend: 11. Retorna estoque + urgência
+    Backend-->>API: JSON com estoque
+    API-->>Frontend: 11. Retorna estoque + urgência
     Frontend-->>Doador: 12. Exibe página de detalhes
     
     Doador->>Frontend: 13. Preenche formulário + confirma
-    Frontend->>Backend: 14. POST /doacoes<br/>(instituicao_id, categoria_id)
+    Frontend->>API: 14. POST /doacoes<br/>(instituicao_id, categoria_id)
+    API->>Backend: Processa requisição
     Backend->>BD: 15. Registra movimentação
     BD-->>Backend: 16. Sucesso
-    Backend-->>Frontend: 17. Retorna confirmação
+    Backend-->>API: JSON confirmação
+    API-->>Frontend: 17. Retorna confirmação (200 OK)
     Frontend-->>Doador: 18. ✅ Doação confirmada!
                     </div>
                 </div>
